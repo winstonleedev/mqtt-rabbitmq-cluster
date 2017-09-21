@@ -1,31 +1,60 @@
 rabbit1:
-  image: harbur/rabbitmq-cluster
+  image: thanhphu/rabbitmq-cluster
   hostname: rabbit1
+  container_name: rabbit-1
   environment:
-    - ERLANG_COOKIE=abcdefg
+    - ERLANG_COOKIE=topsecret
   ports:
     - "5672:5672"
     - "15672:15672"
 rabbit2:
-  image: harbur/rabbitmq-cluster
+  image: thanhphu/rabbitmq-cluster
   hostname: rabbit2
+  container_name: rabbit-2
   links:
     - rabbit1
   environment:
-    - ERLANG_COOKIE=abcdefg
+    - ERLANG_COOKIE=topsecret
     - CLUSTER_WITH=rabbit1
     - ENABLE_RAM=true
   ports:
     - "5673:5672"
     - "15673:15672"
 rabbit3:
-  image: harbur/rabbitmq-cluster
+  image: thanhphu/rabbitmq-cluster
   hostname: rabbit3
+  container_name: rabbit-3
   links:
     - rabbit1
     - rabbit2
   environment:
-    - ERLANG_COOKIE=abcdefg
+    - ERLANG_COOKIE=topsecret
     - CLUSTER_WITH=rabbit1
   ports:
     - "5674:5672"
+mongo:
+  image: mongo
+  hostname: mongo1
+  container-name: mongo-1
+  ports:
+    - "27017:27017"
+broker:
+  image: thanhphu/mqtt-broker
+  hostname: broker1
+  container-name: broker-1
+  links:
+    - rabbit2
+  environment:
+    - AMQP_PORT=5673
+  ports:
+    - "1883:1883"
+collector:
+  image: thanhphu/mqtt-collector
+  hostname: collector1
+  container-name: collector-1
+  links:
+    - rabbit1
+    - mongo1
+  environment:
+    - MONGODB_HOST=mongo1
+    - AMQP_HOST=rabbit3
