@@ -52,14 +52,14 @@ services:
     links:
       - rabbit1
     depends_on:
-      rabbit1:
-        condition: service_healthy
+      - rabbit1
     environment:
       - AMQP_HOST=rabbit1
       - AMQP_PORT=5672
       - NODE_PORT=1883
     ports:
       - "1883:1883"
+    command: bash -c "while ! curl -s rabbit1:5672 > /dev/null; do echo waiting for rabbit1; sleep 3; done; nf start"
   collector:
     image: thanhphu/mqtt-collector
     hostname: collector1
