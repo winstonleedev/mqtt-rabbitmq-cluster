@@ -34,7 +34,7 @@ Once cluster is up:
 
 ## Haproxy ports
 * Haproxy can be accessed via port `1882`
-* Haproxy stats can be accessed via port `8080`
+* Haproxy stats can be accessed via port `8081`
 
 # Rebuild docker image
 
