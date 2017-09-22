@@ -1,22 +1,22 @@
-Docker images to run MQTT broker + RabbitMQ + Collector + MongoDB cluster. 
+Docker files to run a MQTT message cluster. It combines the power of:
+* Haproxy for load balancing
+* A MQTT Broker (mosca) x 3 for two way MQTT messaging support
+* RabbitMQ x 3 for powerful message publish and subscription
+* Custom built MQTT Collector
+* MongoDB
 
-# Building
+To create an easy-to-use and flexible MQTT messaging cluster 
 
-Once you clone the project locally docker to build rabbitmq:
+# Running
 
-```
-docker build -t harbur/rabbitmq-cluster.
-```
-
-# Running with docker-compose
-
-If you want to run the cluster on one machine use [docker-compose](https://github.com/docker/compose/)
+To run the cluster on one machine use [docker-compose](https://github.com/docker/compose/)
 
 ```
 docker-compose up -d
 ```
 
 By default 3 nodes are started up. If needed, additional nodes can be added to this file.
+
 Broker will wait for rabbit1 to start before starting itself by continuously checking port 5762
 
 ```
@@ -24,9 +24,25 @@ command: bash -c "while ! curl -s rabbit1:5672 > /dev/null; do echo waiting for 
 ```
 
 Once cluster is up:
+## RabbitMQ ports
 * The management console can be accessed at `http://hostip:15672`
 * The connection host should look like this: `hostip:5672,hostip:5673,hostip:5674`
 
+## Mosca ports
+* Mosca containers can be accessed via port `1883,1884,1885`
+* These containers are connected to rabbitMQ 1,2,3 respectively
+
+## Haproxy ports
+* Haproxy can be accessed via port `1882`
+* Haproxy stats can be accessed via port `8080`
+
+# Rebuild docker image
+
+If you need to change some rabbitMQ config, you can use docker:
+
+```
+docker build -t thanhphu/rabbitmq-cluster.
+```
 # Credits
 
 * Inspired by https://github.com/bijukunjummen/docker-rabbitmq-cluster
