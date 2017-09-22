@@ -48,14 +48,21 @@ services:
       - rabbit1
     depends_on:
       - rabbit1
-      - rabbit2
-      - rabbit3
     environment:
       - AMQP_HOST=rabbit1
       - AMQP_PORT=5672
       - NODE_PORT=1883
     ports:
       - "1883:1883"
+    command: >
+      /bin/bash -c "
+        while ! nc -z rabbit1 5672;
+        do
+          echo Waiting for rabbit MQ...;
+          sleep 1;
+        done;
+        echo Connected!;
+      " "
   collector:
     image: thanhphu/mqtt-collector
     hostname: collector1
@@ -65,9 +72,8 @@ services:
       - mongo
     depends_on:
       - rabbit1
-      - rabbit2
-      - rabbit3
       - mongo
+      - broker
     environment:
       - AMQP_HOST=rabbit1
       - MONGODB_HOST=mongo
