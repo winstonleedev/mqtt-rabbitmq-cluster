@@ -9,6 +9,11 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
   rabbit2:
     image: thanhphu/rabbitmq-cluster
     hostname: rabbit2
@@ -40,12 +45,6 @@ services:
     container_name: mongo-1
     ports:
       - "27017:27017"
-  wait_for_dependencies:
-    image: dadarek/wait-for-dependencies
-    depends_on:
-      - rabbit1
-      - mongo
-    command: rabbit1:5672 mongo:27017
   broker:
     image: thanhphu/mqtt-broker
     hostname: broker1
@@ -53,8 +52,8 @@ services:
     links:
       - rabbit1
     depends_on:
-      - rabbit1
-      - wait_for_dependencies
+      rabbit1:
+        condition: service_healthy
     environment:
       - AMQP_HOST=rabbit1
       - AMQP_PORT=5672
