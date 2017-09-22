@@ -58,7 +58,7 @@ services:
   broker2:
     image: thanhphu/mqtt-broker
     hostname: broker2
-    container_name: broker-3
+    container_name: broker-2
     links:
       - rabbit2
     depends_on:
@@ -72,7 +72,7 @@ services:
     restart: always
   broker3:
     image: thanhphu/mqtt-broker
-    hostname: broker2
+    hostname: broker3
     container_name: broker-3
     links:
       - rabbit3
@@ -109,8 +109,7 @@ services:
       - mongo
     depends_on:
       - rabbit3
-      - mongo1
-      - broker
+      - mongo
     environment:
       - AMQP_HOST=rabbit3
       - MONGODB_HOST=mongo

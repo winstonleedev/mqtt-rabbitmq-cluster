@@ -1,11 +1,11 @@
-Docker files to run a MQTT message cluster. It combines the power of:
+Docker files to run a Full-stack MQTT messaging cluster. It combines the power of:
 * Haproxy for load balancing
 * A MQTT Broker (mosca) x 3 for two way MQTT messaging support
 * RabbitMQ x 3 for powerful message publish and subscription
 * Custom built MQTT Collector
 * MongoDB
 
-To create an easy-to-use and flexible MQTT messaging cluster 
+To create an easy-to-use cluster capable of handling the volume of messages for typical IoT services.
 
 # Running
 
@@ -47,3 +47,5 @@ docker build -t thanhphu/rabbitmq-cluster.
 
 * Inspired by https://github.com/bijukunjummen/docker-rabbitmq-cluster
 * Forked from https://github.com/harbur/rabbitmq-cluster
+* Contains the work of Lelylan
+* Uses Mosca and Mongo DB
