@@ -32,6 +32,7 @@ services:
     environment:
       - ERLANG_COOKIE=topsecret
       - CLUSTER_WITH=rabbit1
+      - ENABLE_RAM=true
     ports:
       - "5674:5672"
   mongo:
@@ -45,9 +46,9 @@ services:
     hostname: broker1
     container_name: broker-1
     links:
-      - rabbit2
+      - rabbit1
     environment:
-      - AMQP_HOST=rabbit2
+      - AMQP_HOST=rabbit1
       - AMQP_PORT=5672
       - NODE_PORT=1883
     ports:
@@ -57,8 +58,8 @@ services:
     hostname: collector1
     container_name: collector-1
     links:
-      - rabbit3
+      - rabbit1
       - mongo
     environment:
       - MONGODB_HOST=mongo
-      - AMQP_HOST=rabbit3
+      - AMQP_HOST=rabbit1
