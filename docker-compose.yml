@@ -33,13 +33,19 @@ services:
       - ERLANG_COOKIE=topsecret
       - CLUSTER_WITH=rabbit1
     ports:
-      - "5674:5672"
+      - "5674:5672"  
   mongo:
     image: mongo
     hostname: mongo1
     container_name: mongo-1
     ports:
       - "27017:27017"
+  wait_for_dependencies:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+      - rabbit1
+      - mongo
+    command: rabbit1:5672 mongo:27017
   broker:
     image: thanhphu/mqtt-broker
     hostname: broker1
@@ -48,21 +54,13 @@ services:
       - rabbit1
     depends_on:
       - rabbit1
+      - wait_for_dependencies
     environment:
       - AMQP_HOST=rabbit1
       - AMQP_PORT=5672
       - NODE_PORT=1883
     ports:
       - "1883:1883"
-    command: >
-      /bin/bash -c "
-        while ! nc -z rabbit1 5672;
-        do
-          echo Waiting for rabbit MQ...;
-          sleep 1;
-        done;
-        echo Connected!;
-      " "
   collector:
     image: thanhphu/mqtt-collector
     hostname: collector1
