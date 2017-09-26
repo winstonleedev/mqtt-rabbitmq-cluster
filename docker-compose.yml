@@ -129,3 +129,4 @@ services:
     ports:
       - "1882:1883"
       - "8081:8080"
+    restart: always
