@@ -13,7 +13,7 @@ services:
     ports:
       - "27017:27017"
   broker1:
-    image: thanhphu/mqtt-broker:nomq
+    image: thanhphu/mqtt-broker:redis
     hostname: broker1
     container_name: broker-1
     links:
@@ -25,7 +25,7 @@ services:
       - "1883:1883"
     restart: always
   broker2:
-    image: thanhphu/mqtt-broker:nomq
+    image: thanhphu/mqtt-broker:redis
     hostname: broker2
     container_name: broker-2
     links:
@@ -37,7 +37,7 @@ services:
       - "1884:1883"
     restart: always
   broker3:
-    image: thanhphu/mqtt-broker:nomq
+    image: thanhphu/mqtt-broker:redis
     hostname: broker3
     container_name: broker-3
     links:
@@ -49,7 +49,7 @@ services:
       - "1885:1883"
     restart: always
   collector:
-    image: thanhphu/mqtt-collector:nomq
+    image: thanhphu/mqtt-collector:redis
     hostname: collector1
     container_name: collector-1
     links:
