@@ -7,7 +7,7 @@ services:
     ports:
       - "27017:27017"
   broker1:
-    image: thanhphu/mqtt-broker
+    image: thanhphu/mqtt-broker:nomq
     hostname: broker1
     container_name: broker-1
     environment:
@@ -17,7 +17,7 @@ services:
       - "1883:1883"
     restart: always
   broker2:
-    image: thanhphu/mqtt-broker
+    image: thanhphu/mqtt-broker:nomq
     hostname: broker2
     container_name: broker-2
     environment:
@@ -27,7 +27,7 @@ services:
       - "1884:1883"
     restart: always
   broker3:
-    image: thanhphu/mqtt-broker
+    image: thanhphu/mqtt-broker:nomq
     hostname: broker3
     container_name: broker-3
     environment:
@@ -41,9 +41,12 @@ services:
     hostname: collector1
     container_name: collector-1
     links:
+      - broker1
+      - broker2
+      - broker3
       - mongo
     environment:
-      - AMQP_HOST=rabbit3
+      - AMQP_HOST=rabbit1
       - MONGODB_HOST=mongo
     restart: always
   haproxy:
