@@ -92,27 +92,10 @@ services:
     links:
       - rabbit3
       - mongo
-    depends_on:
-      - rabbit3
-      - mongo1
-      - broker
     environment:
       - AMQP_HOST=rabbit3
       - MONGODB_HOST=mongo
     restart: always
-  collector:
-    image: thanhphu/mqtt-collector
-    hostname: collector1
-    container_name: collector-1
-    links:
-      - rabbit3
-      - mongo
-    depends_on:
-      - rabbit3
-      - mongo
-    environment:
-      - AMQP_HOST=rabbit3
-      - MONGODB_HOST=mongo
     restart: always
   haproxy:
     image: thanhphu/mqtt-haproxy
