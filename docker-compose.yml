@@ -34,7 +34,7 @@ services:
       - "1885:1883"
     restart: always
   collector:
-    image: thanhphu/mqtt-collector
+    image: thanhphu/mqtt-collector:nomq
     hostname: collector1
     container_name: collector-1
     links:
