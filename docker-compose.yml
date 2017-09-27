@@ -1,5 +1,11 @@
 version: "3.3"
 services:
+  redis:
+    image: redis
+    hostname: redis1
+    container_name: redis-1
+    ports:
+      - "6379:6379"
   mongo:
     image: mongo
     hostname: mongo1
@@ -10,7 +16,10 @@ services:
     image: thanhphu/mqtt-broker:nomq
     hostname: broker1
     container_name: broker-1
+    links:
+      - redis1
     environment:
+      - REDIS_HOST=redis1
       - NODE_PORT=1883
     ports:
       - "1883:1883"
@@ -19,7 +28,10 @@ services:
     image: thanhphu/mqtt-broker:nomq
     hostname: broker2
     container_name: broker-2
+    links:
+      - redis1
     environment:
+      - REDIS_HOST=redis1
       - NODE_PORT=1883
     ports:
       - "1884:1883"
@@ -28,7 +40,10 @@ services:
     image: thanhphu/mqtt-broker:nomq
     hostname: broker3
     container_name: broker-3
+    links:
+      - redis1
     environment:
+      - REDIS_HOST=redis1
       - NODE_PORT=1883
     ports:
       - "1885:1883"
