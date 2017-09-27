@@ -1,12 +1,12 @@
 version: "3.3"
 services:
-  redis:
+  redis1:
     image: redis
     hostname: redis1
     container_name: redis-1
     ports:
       - "6379:6379"
-  mongo:
+  mongo1:
     image: mongo
     hostname: mongo1
     container_name: mongo-1
@@ -56,10 +56,10 @@ services:
       - broker1
       - broker2
       - broker3
-      - mongo
+      - mongo1
     environment:
       - MQTT_HOSTS=broker1,broker2,broker3
-      - MONGODB_HOST=mongo
+      - MONGODB_HOST=mongo1
     restart: always
   haproxy:
     image: thanhphu/mqtt-haproxy
