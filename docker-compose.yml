@@ -43,9 +43,7 @@ services:
       - broker3
       - mongo
     environment:
-      - MQTT_HOST1=broker1
-      - MQTT_HOST2=broker2
-      - MQTT_HOST3=broker3
+      - MQTT_HOSTS=broker1,broker2,broker3
       - MONGODB_HOST=mongo
     restart: always
   haproxy:
