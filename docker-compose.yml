@@ -1,6 +1,6 @@
 version: "3.3"
 services:
-  redis:
+  redis1:
     image: redis
     hostname: redis1
     container_name: redis-1
