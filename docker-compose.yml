@@ -1,39 +1,26 @@
 version: "3.3"
 services:
-  rabbit1:
-    image: thanhphu/rabbitmq-cluster
-    hostname: rabbit1
-    container_name: rabbit-1
+  kafka1:
+    image: spotify/kafka
+    hostname: kafka1
+    container_name: kafka-1
     environment:
-      - ERLANG_COOKIE=topsecret
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-  rabbit2:
-    image: thanhphu/rabbitmq-cluster
-    hostname: rabbit2
-    container_name: rabbit-2
-    links:
-      - rabbit1
+      - ADVERTISED_HOST=kafka1
+      - ADVERTISED_PORT=9092    
+  kafka2:
+    image: spotify/kafka
+    hostname: kafka2
+    container_name: kafka-2
     environment:
-      - ERLANG_COOKIE=topsecret
-      - CLUSTER_WITH=rabbit1
-      - ENABLE_RAM=true
-    ports:
-      - "5673:5672"
-      - "15673:15672"
-  rabbit3:
-    image: thanhphu/rabbitmq-cluster
-    hostname: rabbit3
-    container_name: rabbit-3
-    links:
-      - rabbit1
-      - rabbit2
+      - ADVERTISED_HOST=kafka2
+      - ADVERTISED_PORT=9092
+  kafka3:
+    image: spotify/kafka
+    hostname: kafka3
+    container_name: kafka-3
     environment:
-      - ERLANG_COOKIE=topsecret
-      - CLUSTER_WITH=rabbit1
-    ports:
-      - "5674:5672"  
+      - ADVERTISED_HOST=kafka3
+      - ADVERTISED_PORT=9092
   mongo:
     image: mongo
     hostname: mongo1
@@ -41,46 +28,43 @@ services:
     ports:
       - "27017:27017"
   broker1:
-    image: thanhphu/mqtt-broker
+    image: thanhphu/mqtt-broker:kafka
     hostname: broker1
     container_name: broker-1
     links:
-      - rabbit1
-    depends_on:
-      - rabbit1
+      - kafka1
+      - kafka2
+      - kafka3
     environment:
-      - AMQP_HOST=rabbit1
-      - AMQP_PORT=5672
+      - KAFKA_HOST=kafka1:2181,kafka2:2181,kafka3:2181
       - NODE_PORT=1883
     ports:
       - "1883:1883"
     restart: always
   broker2:
-    image: thanhphu/mqtt-broker
+    image: thanhphu/mqtt-broker:kafka
     hostname: broker2
     container_name: broker-2
     links:
-      - rabbit2
-    depends_on:
-      - rabbit2
+      - kafka1
+      - kafka2
+      - kafka3
     environment:
-      - AMQP_HOST=rabbit2
-      - AMQP_PORT=5672
+      - KAFKA_HOST=kafka1:2181,kafka2:2181,kafka3:2181
       - NODE_PORT=1883
     ports:
       - "1884:1883"
     restart: always
   broker3:
-    image: thanhphu/mqtt-broker
+    image: thanhphu/mqtt-broker:kafka
     hostname: broker3
     container_name: broker-3
     links:
-      - rabbit3
-    depends_on:
-      - rabbit3
+      - kafka1
+      - kafka2
+      - kafka3
     environment:
-      - AMQP_HOST=rabbit3
-      - AMQP_PORT=5672
+      - KAFKA_HOST=kafka1:2181,kafka2:2181,kafka3:2181
       - NODE_PORT=1883
     ports:
       - "1885:1883"
