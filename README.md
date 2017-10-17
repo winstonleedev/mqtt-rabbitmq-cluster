@@ -24,6 +24,16 @@ command: bash -c "while ! curl -s rabbit1:5672 > /dev/null; do echo waiting for 
 ```
 
 Once cluster is up:
+
+Subscribe with
+```
+mosquitto_sub -p 1882 -t 'thanhphu/topic' -d
+```
+Send messages with
+```
+mosquitto_pub -p 1882 -t 'thanhphu/topic' -m 'my message'
+```
+
 ## RabbitMQ ports
 * The management console can be accessed at `http://hostip:15672`
 * The connection host should look like this: `hostip:5672,hostip:5673,hostip:5674`
