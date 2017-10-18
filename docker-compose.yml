@@ -2,6 +2,8 @@ version: "3.3"
 services:
   kafka1:
     image: wurstmeister/kafka
+    hostname: kafka1
+    container_name: kafka1
     depends_on:
       - zoo1
       - zoo2
@@ -11,8 +13,8 @@ services:
     environment:
       KAFKA_LOG_DIRS: /kafka
       KAFKA_BROKER_ID: 1
-      KAFKA_CREATE_TOPICS: thanhphu:1:2
-      KAFKA_ADVERTISED_HOST_NAME: 192.168.99.100
+      KAFKA_CREATE_TOPICS: thanhphu/topic:1:2
+      KAFKA_ADVERTISED_HOST_NAME: kafka1
       KAFKA_ADVERTISED_PORT: 9092
       KAFKA_LOG_RETENTION_HOURS: "168"
       KAFKA_LOG_RETENTION_BYTES: "100000000"
@@ -20,6 +22,8 @@ services:
 
   kafka2:
     image: wurstmeister/kafka
+    hostname: kafka2
+    container_name: kafka2
     depends_on:
       - zoo1
       - zoo2
@@ -29,7 +33,7 @@ services:
     environment:
       KAFKA_LOG_DIRS: /kafka
       KAFKA_BROKER_ID: 2
-      KAFKA_ADVERTISED_HOST_NAME: 192.168.99.100
+      KAFKA_ADVERTISED_HOST_NAME: kafka1
       KAFKA_ADVERTISED_PORT: 9093
       KAFKA_LOG_RETENTION_HOURS: "168"
       KAFKA_LOG_RETENTION_BYTES: "100000000"
@@ -37,6 +41,8 @@ services:
 
   kafka3:
     image: wurstmeister/kafka
+    hostname: kafka3
+    container_name: kafka3
     depends_on:
       - zoo1
       - zoo2
@@ -46,7 +52,7 @@ services:
     environment:
       KAFKA_LOG_DIRS: /kafka
       KAFKA_BROKER_ID: 3
-      KAFKA_ADVERTISED_HOST_NAME: 192.168.99.100
+      KAFKA_ADVERTISED_HOST_NAME: kafka1
       KAFKA_ADVERTISED_PORT: 9094
       KAFKA_LOG_RETENTION_HOURS: "168"
       KAFKA_LOG_RETENTION_BYTES: "100000000"
@@ -54,6 +60,7 @@ services:
 
   zoo1:
     image: elevy/zookeeper:latest
+    container_name: zoo1
     environment:
       MYID: 1
       SERVERS: zoo1,zoo2,zoo3
@@ -64,6 +71,7 @@ services:
 
   zoo2:
     image: elevy/zookeeper:latest
+    container_name: zoo2
     environment:
       MYID: 2
       SERVERS: zoo1,zoo2,zoo3
@@ -74,6 +82,7 @@ services:
 
   zoo3:
     image: elevy/zookeeper:latest
+    container_name: zoo3
     environment:
       MYID: 3
       SERVERS: zoo1,zoo2,zoo3
@@ -92,11 +101,11 @@ services:
     hostname: broker1
     container_name: broker-1
     links:
-      - kafka1
-      - kafka2
-      - kafka3
+      - zoo1
+      - zoo2
+      - zoo3
     environment:
-      - KAFKA_HOST=kafka1:2181,kafka2:2181,kafka3:2181
+      - KAFKA_HOST=zoo1:2181,zoo2:2181,zoo3:2181
       - NODE_PORT=1883
     ports:
       - "1883:1883"
@@ -106,11 +115,11 @@ services:
     hostname: broker2
     container_name: broker-2
     links:
-      - kafka1
-      - kafka2
-      - kafka3
+      - zoo1
+      - zoo2
+      - zoo3
     environment:
-      - KAFKA_HOST=kafka1:2181,kafka2:2181,kafka3:2181
+      - KAFKA_HOST=zoo1:2181,zoo2:2181,zoo3:2181
       - NODE_PORT=1883
     ports:
       - "1884:1883"
@@ -120,26 +129,27 @@ services:
     hostname: broker3
     container_name: broker-3
     links:
-      - kafka1
-      - kafka2
-      - kafka3
+      - zoo1
+      - zoo2
+      - zoo3
     environment:
-      - KAFKA_HOST=kafka1:2181,kafka2:2181,kafka3:2181
+      - KAFKA_HOST=zoo1:2181,zoo2:2181,zoo3:2181
       - NODE_PORT=1883
     ports:
       - "1885:1883"
     restart: always
   collector:
-    image: thanhphu/mqtt-collector
+    image: thanhphu/mqtt-collector:kafka
     hostname: collector1
     container_name: collector-1
     links:
-      - rabbit3
+      - zoo1
+      - zoo2
+      - zoo3
       - mongo
     environment:
-      - AMQP_HOST=rabbit3
+      - KAFKA_HOST=zoo1:2181,zoo2:2181,zoo3:2181
       - MONGODB_HOST=mongo
-    restart: always
     restart: always
   haproxy:
     image: thanhphu/mqtt-haproxy
