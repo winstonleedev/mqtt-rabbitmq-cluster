@@ -6,6 +6,12 @@ COPY pre-entrypoint.sh /
 
 RUN rabbitmq-plugins enable --offline rabbitmq_mqtt
 
-EXPOSE 5672 15672 8883
+# AMQP PORTS
+EXPOSE 5672 15672
+# MQTT PORTS
+EXPOSE 1883 8883
+# EPMD PORTS for discovery https://stackoverflow.com/questions/12792856/what-ports-does-rabbitmq-use
+EXPOSE 4369 35197
+
 ENTRYPOINT ["/pre-entrypoint.sh"]
 CMD ["rabbitmq-cluster"]
