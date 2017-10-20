@@ -5,7 +5,7 @@ Docker files to run a Full-stack MQTT messaging cluster. It combines the power o
 * Custom built MQTT Collector
 * MongoDB
 
-To create an easy-to-use cluster capable of handling the volume of messages for typical IoT services. All images have been pushlished on docker hub for your convenience.
+To create an easy-to-use cluster capable of handling the volume of messages for typical IoT services. All images have been pushlished on docker hub for your convenience. Great to use as a basis to experiment with MQTT message storage.
 
 # Running
 
@@ -19,7 +19,17 @@ By default 3 RabbitMQ nodes are started up. If needed, additional nodes can be a
 
 Broker will wait for rabbit1 to start before starting itself by continuously checking port 5762
 
-Once cluster is up, you can connect to RabbitMQ, Mosca and Haproxy
+Once cluster is up:
+
+Subscribe with
+```
+mosquitto_sub -p 1882 -t 'thanhphu/topic' -d
+```
+Send messages with
+```
+mosquitto_pub -p 1882 -t 'thanhphu/topic' -m 'my message'
+```
+
 ## RabbitMQ ports
 * The management console can be accessed at `http://hostip:15672`
 * The management API can be accessed at `http://hostip:15672/api`
@@ -47,11 +57,11 @@ docker build -t thanhphu/rabbitmq-cluster.
 * [mqtt-haproxy](https://github.com/thanhphu/mqtt-haproxy)
 
 # Branches (flavors)
-* **master**
-* **kafka**
-* **redis**
-* **nomq**
-* **rabbitmq-mqtt**
+* **master**: Trusty RabbitMQ
+* **kafka**: High performance Kafka instead of RabbitMQ, also includes zookeeper
+* **redis**: Use Redis to sync mosca instead of RabbitMQ
+* **nomq**: No backend for mosca, messages are not synchronized between MQTT brokers
+* **rabbitmq-mqtt**: Use RabbitMQ's MQTT plugin instead of Mosca
 
 # Credits
 
