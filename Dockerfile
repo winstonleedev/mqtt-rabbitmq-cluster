@@ -1,9 +1,11 @@
 FROM rabbitmq:3.5.3-management
-MAINTAINER Dimitris Kapanidis dimitris.kapanidis@harbur.io
+LABEL maintainer "Thanh Phu"
 
 COPY rabbitmq-cluster /usr/local/bin/
 COPY pre-entrypoint.sh /
 
-EXPOSE 5672 15672 25672 4369 9100 9101 9102 9103 9104 9105
+RUN rabbitmq-plugins enable --offline rabbitmq_mqtt
+
+EXPOSE 5672 15672 8883
 ENTRYPOINT ["/pre-entrypoint.sh"]
 CMD ["rabbitmq-cluster"]
