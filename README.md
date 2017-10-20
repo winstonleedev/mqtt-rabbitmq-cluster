@@ -45,12 +45,20 @@ mosquitto_pub -p 1882 -t 'thanhphu/topic' -m 'my message'
 
 # Rebuild docker image
 
-If you need to change some rabbitMQ config, you can use docker:
+Use docker to rebuild rabbitMQ after you change some config (Dockerfil, pre-entrypoint)
 
 ```
-docker build -t thanhphu/rabbitmq-cluster.
+docker build -t thanhphu/rabbitmq-cluster .
 ```
 
+# Files
+## RabbitMQ
+* Dockerfile
+* rabbitmq-cluster
+* docker-restart.sh
+* pre-entrypoint.sh
+## Cluster
+* docker-compose.yml
 # Dependencies
 * [mqtt-broker](https://github.com/thanhphu/mqtt-broker)
 * [mqtt-collector](https://github.com/thanhphu/mqtt-collector)
