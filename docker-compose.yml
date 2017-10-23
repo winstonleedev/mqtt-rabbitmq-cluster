@@ -43,7 +43,7 @@ services:
     restart: always
     restart: always
   haproxy:
-    image: thanhphu/mqtt-haproxy
+    image: thanhphu/mqtt-haproxy:single
     hostname: haproxy1
     container_name: haproxy-1
     links:
