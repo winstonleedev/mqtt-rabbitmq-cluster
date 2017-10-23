@@ -1,5 +1,11 @@
 version: "3.3"
 services:
+  redis1:
+    image: redis
+    hostname: redis1
+    container_name: redis-1
+    ports:
+      - "6379:6379"
   rabbit1:
     image: thanhphu/rabbitmq-cluster
     hostname: rabbit1
