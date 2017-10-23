@@ -1,5 +1,11 @@
 version: "3.3"
 services:
+  redis1:
+    image: redis
+    hostname: redis1
+    container_name: redis-1
+    ports:
+      - "6379:6379"
   rabbit1:
     image: thanhphu/rabbitmq-cluster
     hostname: rabbit1
@@ -16,13 +22,12 @@ services:
     ports:
       - "27017:27017"
   broker1:
-    image: thanhphu/mqtt-broker
+    image: thanhphu/mqtt-broker:single
     hostname: broker1
     container_name: broker-1
     links:
       - rabbit1
-    depends_on:
-      - rabbit1
+      - redis1
     environment:
       - AMQP_HOST=rabbit1
       - AMQP_PORT=5672
