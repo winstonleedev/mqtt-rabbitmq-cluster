@@ -9,31 +9,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-  rabbit2:
-    image: thanhphu/rabbitmq-cluster
-    hostname: rabbit2
-    container_name: rabbit-2
-    links:
-      - rabbit1
-    environment:
-      - ERLANG_COOKIE=topsecret
-      - CLUSTER_WITH=rabbit1
-      - ENABLE_RAM=true
-    ports:
-      - "5673:5672"
-      - "15673:15672"
-  rabbit3:
-    image: thanhphu/rabbitmq-cluster
-    hostname: rabbit3
-    container_name: rabbit-3
-    links:
-      - rabbit1
-      - rabbit2
-    environment:
-      - ERLANG_COOKIE=topsecret
-      - CLUSTER_WITH=rabbit1
-    ports:
-      - "5674:5672"  
   mongo:
     image: mongo
     hostname: mongo1
@@ -55,45 +30,15 @@ services:
     ports:
       - "1883:1883"
     restart: always
-  broker2:
-    image: thanhphu/mqtt-broker
-    hostname: broker2
-    container_name: broker-2
-    links:
-      - rabbit2
-    depends_on:
-      - rabbit2
-    environment:
-      - AMQP_HOST=rabbit2
-      - AMQP_PORT=5672
-      - NODE_PORT=1883
-    ports:
-      - "1884:1883"
-    restart: always
-  broker3:
-    image: thanhphu/mqtt-broker
-    hostname: broker3
-    container_name: broker-3
-    links:
-      - rabbit3
-    depends_on:
-      - rabbit3
-    environment:
-      - AMQP_HOST=rabbit3
-      - AMQP_PORT=5672
-      - NODE_PORT=1883
-    ports:
-      - "1885:1883"
-    restart: always
   collector:
     image: thanhphu/mqtt-collector
     hostname: collector1
     container_name: collector-1
     links:
-      - rabbit3
+      - rabbit1
       - mongo
     environment:
-      - AMQP_HOST=rabbit3
+      - AMQP_HOST=rabbit1
       - MONGODB_HOST=mongo
     restart: always
     restart: always
@@ -103,12 +48,8 @@ services:
     container_name: haproxy-1
     links:
       - broker1
-      - broker2
-      - broker3
     depends_on:
       - broker1
-      - broker2
-      - broker3
     ports:
       - "1882:1883"
       - "8081:8080"

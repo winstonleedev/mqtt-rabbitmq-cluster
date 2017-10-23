@@ -70,6 +70,7 @@ docker build -t thanhphu/rabbitmq-cluster .
 * **redis**: Use Redis to sync mosca instead of RabbitMQ
 * **nomq**: No backend for mosca, messages are not synchronized between MQTT brokers
 * **rabbitmq-mqtt**: Use RabbitMQ's MQTT plugin instead of Mosca
+* **single**: One instance of everything, used to test functionality
 
 # Credits
 
