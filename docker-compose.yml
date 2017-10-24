@@ -54,9 +54,11 @@ services:
       - rabbit1
       - rabbit2
       - rabbit3
+      - redis1
     environment:
       - AMQP_HOST=rabbit1,rabbit2,rabbit3
       - AMQP_PORT=5672
+      - REDIS_HOST=redis1
       - NODE_PORT=1883
     ports:
       - "1883:1883"
@@ -69,9 +71,11 @@ services:
       - rabbit1
       - rabbit2
       - rabbit3
+      - redis1
     environment:
       - AMQP_HOST=rabbit1,rabbit2,rabbit3
       - AMQP_PORT=5672
+      - REDIS_HOST=redis1
       - NODE_PORT=1883
     ports:
       - "1884:1883"
@@ -84,8 +88,10 @@ services:
       - rabbit1
       - rabbit2
       - rabbit3
+      - redis1
     environment:
       - AMQP_HOST=rabbit1,rabbit2,rabbit3
+      - REDIS_HOST=redis1
       - AMQP_PORT=5672
       - NODE_PORT=1883
     ports:
