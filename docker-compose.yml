@@ -52,10 +52,10 @@ services:
     container_name: broker-1
     links:
       - rabbit1
-    depends_on:
-      - rabbit1
+      - rabbit2
+      - rabbit3
     environment:
-      - AMQP_HOST=rabbit1
+      - AMQP_HOST=rabbit1,rabbit2,rabbit3
       - AMQP_PORT=5672
       - NODE_PORT=1883
     ports:
@@ -66,11 +66,11 @@ services:
     hostname: broker2
     container_name: broker-2
     links:
+      - rabbit1
       - rabbit2
-    depends_on:
-      - rabbit2
+      - rabbit3
     environment:
-      - AMQP_HOST=rabbit2
+      - AMQP_HOST=rabbit1,rabbit2,rabbit3
       - AMQP_PORT=5672
       - NODE_PORT=1883
     ports:
@@ -81,27 +81,39 @@ services:
     hostname: broker3
     container_name: broker-3
     links:
-      - rabbit3
-    depends_on:
+      - rabbit1
+      - rabbit2
       - rabbit3
     environment:
-      - AMQP_HOST=rabbit3
+      - AMQP_HOST=rabbit1,rabbit2,rabbit3
       - AMQP_PORT=5672
       - NODE_PORT=1883
     ports:
       - "1885:1883"
     restart: always
-  collector:
+  collector1:
     image: thanhphu/mqtt-collector
     hostname: collector1
     container_name: collector-1
     links:
+      - rabbit1
+      - rabbit2
       - rabbit3
       - mongo
     environment:
-      - AMQP_HOST=rabbit3
       - MONGODB_HOST=mongo
     restart: always
+  collector2:
+    image: thanhphu/mqtt-collector
+    hostname: collector2
+    container_name: collector-2
+    links:
+      - rabbit1
+      - rabbit2
+      - rabbit3
+      - mongo
+    environment:
+      - MONGODB_HOST=mongo
     restart: always
   haproxy:
     image: thanhphu/mqtt-haproxy
