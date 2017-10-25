@@ -1,5 +1,5 @@
 FROM rabbitmq:3.5.3-management
-MAINTAINER Dimitris Kapanidis dimitris.kapanidis@harbur.io
+LABEL maintainer="Thanh Phu <docker-maintenance@kii.systems>"
 
 COPY rabbitmq-cluster /usr/local/bin/
 COPY pre-entrypoint.sh /

@@ -28,18 +28,18 @@ services:
     ports:
       - "5673:5672"
       - "15673:15672"
-  rabbit3:
-    image: thanhphu/rabbitmq-cluster
-    hostname: rabbit3
-    container_name: rabbit-3
-    links:
-      - rabbit1
-      - rabbit2
-    environment:
-      - ERLANG_COOKIE=topsecret
-      - CLUSTER_WITH=rabbit1
-    ports:
-      - "5674:5672"  
+  # rabbit3:
+  #   image: thanhphu/rabbitmq-cluster
+  #   hostname: rabbit3
+  #   container_name: rabbit-3
+  #   links:
+  #     - rabbit1
+  #     - rabbit2
+  #   environment:
+  #     - ERLANG_COOKIE=topsecret
+  #     - CLUSTER_WITH=rabbit1
+  #   ports:
+  #     - "5674:5672"
   mongo:
     image: mongo
     hostname: mongo1
@@ -50,13 +50,8 @@ services:
     image: thanhphu/mqtt-broker
     hostname: broker1
     container_name: broker-1
-    links:
-      - rabbit1
-      - rabbit2
-      - rabbit3
-      - redis1
     environment:
-      - AMQP_HOST=rabbit1,rabbit2,rabbit3
+      - AMQP_HOST=rabbit1,rabbit2
       - AMQP_PORT=5672
       - REDIS_HOST=redis1
       - NODE_PORT=1883
@@ -67,13 +62,8 @@ services:
     image: thanhphu/mqtt-broker
     hostname: broker2
     container_name: broker-2
-    links:
-      - rabbit1
-      - rabbit2
-      - rabbit3
-      - redis1
     environment:
-      - AMQP_HOST=rabbit1,rabbit2,rabbit3
+      - AMQP_HOST=rabbit1,rabbit2
       - AMQP_PORT=5672
       - REDIS_HOST=redis1
       - NODE_PORT=1883
@@ -84,13 +74,8 @@ services:
     image: thanhphu/mqtt-broker
     hostname: broker3
     container_name: broker-3
-    links:
-      - rabbit1
-      - rabbit2
-      - rabbit3
-      - redis1
     environment:
-      - AMQP_HOST=rabbit1,rabbit2,rabbit3
+      - AMQP_HOST=rabbit1,rabbit2
       - REDIS_HOST=redis1
       - AMQP_PORT=5672
       - NODE_PORT=1883
@@ -101,38 +86,22 @@ services:
     image: thanhphu/mqtt-collector
     hostname: collector1
     container_name: collector-1
-    links:
-      - rabbit1
-      - rabbit2
-      - rabbit3
-      - mongo
     environment:
+      - AMQP_HOST=rabbit1,rabbit2
       - MONGODB_HOST=mongo
     restart: always
   collector2:
     image: thanhphu/mqtt-collector
     hostname: collector2
     container_name: collector-2
-    links:
-      - rabbit1
-      - rabbit2
-      - rabbit3
-      - mongo
     environment:
+      - AMQP_HOST=rabbit1,rabbit2
       - MONGODB_HOST=mongo
     restart: always
   haproxy:
     image: thanhphu/mqtt-haproxy
     hostname: haproxy1
     container_name: haproxy-1
-    links:
-      - broker1
-      - broker2
-      - broker3
-    depends_on:
-      - broker1
-      - broker2
-      - broker3
     ports:
       - "1882:1883"
       - "8081:8080"
